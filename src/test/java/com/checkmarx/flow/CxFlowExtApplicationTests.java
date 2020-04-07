@@ -1,4 +1,4 @@
-package com.checkmarx.flow.CxFlowExt;
+package com.checkmarx.flow;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
