@@ -7,7 +7,6 @@ jobs:
     environment:
       MAVEN_OPTS: -Xmx3200m
       CX_FLOW_URL: https://github.com/checkmarx-ts/cx-flow.git
-      CX_FLOW_BRANCH: develop
     steps:
       - checkout
       - restore_cache:
@@ -18,7 +17,7 @@ jobs:
       - run: ./mvnw test
       - run: ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout > target/version.txt
       #Clone CxFlow
-      - run: git clone -b ${CX_FLOW_BRANCH} ${CX_FLOW_URL}
+      - run: git clone -b $(cat cxflow.version) ${CX_FLOW_URL}
       #Add new source files (no overwrite)
       - run: cp -vnpr src/main/ cx-flow/src/main
       - run: cd cx-flow && chmod +x gradlew && ./gradlew clean build -x test
