@@ -22,7 +22,7 @@ jobs:
       #Add new source files (no overwrite)
       - run: cp -vnpr src/main/ cx-flow/src/main
       - run: cd cx-flow && chmod +x gradlew
-      - run: ./gradle clean build -x tests
+      - run: ./gradlew clean build -x test
       - run: cp build/libs/*.jar ../target/
       - save_cache:
           paths:
