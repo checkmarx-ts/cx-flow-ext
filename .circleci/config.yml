@@ -15,8 +15,8 @@ jobs:
             - v1-dependencies-{{ checksum "pom.xml" }}
             - v1-dependencies-
       - run: chmod +x mvnw
-      - run: mvnw test
-      - run: mvnw help:evaluate -Dexpression=project.version -q -DforceStdout > target/version.txt
+      - run: ./mvnw test
+      - run: ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout > target/version.txt
       #Clone CxFlow
       - run: git clone -b ${CX_FLOW_BRANCH} ${CX_FLOW_URL}
       #Add new source files (no overwrite)
