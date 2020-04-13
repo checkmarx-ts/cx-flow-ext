@@ -17,11 +17,17 @@ jobs:
       - run: ./mvnw test
       - run: ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout > target/version.txt
       #Clone CxFlow
-      - run: git clone -b $(cat cxflow.version) ${CX_FLOW_URL}
-      #Add new source files (no overwrite)
-      - run: cp -vnpr src/main/ cx-flow/src/main
-      - run: cd cx-flow && chmod +x gradlew && ./gradlew clean build -x test
-      - run: cp cx-flow/build/libs/*.jar target/cx-flow-ext-$(cat ./target/version.txt).jar
+      - run:
+          name: "Build CxFlow with Extensions"
+          command: |
+            git clone -b $(cat cxflow.version) ${CX_FLOW_URL}
+            #Add new source files (no overwrite)
+            cp -vnr src/main/ cx-flow/src/main
+            cd cx-flow
+            chmod +x
+            ./gradlew clean build -x test
+            find .
+            cp build/libs/*.jar ../target/cx-flow-ext-$(cat ../target/version.txt).jar
       - save_cache:
           paths:
             - ~/.m2
