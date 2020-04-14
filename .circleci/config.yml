@@ -22,7 +22,7 @@ jobs:
           command: |
             git clone -b $(cat cxflow.version) ${CX_FLOW_URL}
             #Add new source files (no overwrite)
-            cp -vnr src/main/ cx-flow/src/main
+            cp -vnr src/main/* cx-flow/src/main
             cd cx-flow
             chmod +x gradlew
             ./gradlew clean build -x test
