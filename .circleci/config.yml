@@ -26,7 +26,6 @@ jobs:
             cd cx-flow
             chmod +x gradlew
             ./gradlew clean build -x test
-            find .
             cp build/libs/*.jar ../target/cx-flow-ext-$(cat ../target/version.txt).jar
       - save_cache:
           paths:
