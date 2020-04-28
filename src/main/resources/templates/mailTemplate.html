@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<span th:text="${message}"></span>
+<br>
+<span th:text="${pusher}"></span>
+
+<table border="2">
+    <thead>
+    <tr>
+        <th style="width:20px;"> Link </th>
+        <th style="width:50px;"> Severity </th>
+        <th style="width:150px;"> Category </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${issues.empty}">
+        <td colspan="4"> No Issues Found </td>
+    </tr>
+    <tr th:each="issue : ${issues}">
+        <td><a th:href="${issue.link}" rel="noopener noreferrer" target="_blank">Link</a></td>
+        <td><span th:class="${issue.severity}" th:text="${issue.severity}"></span></td>
+        <td><span th:text="${issue.vulnerability}"></span></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
