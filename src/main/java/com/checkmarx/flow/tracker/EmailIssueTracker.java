@@ -57,7 +57,7 @@ public class EmailIssueTracker implements IssueTracker {
             emailCtx.put("link", results.getLink());
         }
 
-        emailIssueService.sendmail(request.getEmail(), emailSubject, emailCtx, "mailTemplate.html");
+        emailIssueService.sendmail(request.getEmail(), emailSubject, emailCtx);
 
     }
 

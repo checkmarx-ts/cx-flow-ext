@@ -26,7 +26,7 @@ public class EmailIssueService {
     private final JavaMailSender emailSender;
 
     @ConstructorProperties({"emailProperties", "templateEngine", "emailSender"})
-    public EmailIssueService(EmailProperties emailProperties, TemplateEngine templateEngine, @Qualifier("cxFlowExtMailSender") JavaMailSender emailSender) {
+    public EmailIssueService(EmailProperties emailProperties, @Qualifier("cxFlowExtTemplateEngine") TemplateEngine templateEngine, @Qualifier("cxFlowExtMailSender") JavaMailSender emailSender) {
         this.emailProperties = emailProperties;
         this.templateEngine = templateEngine;
         this.emailSender = emailSender;
@@ -38,9 +38,8 @@ public class EmailIssueService {
      * @param recipients
      * @param subject
      * @param ctx
-     * @param template
      */
-    public void sendmail(List<String> recipients, @NotNull String subject, @NotNull Map<String, Object> ctx, String template){
+    public void sendmail(List<String> recipients, @NotNull String subject, @NotNull Map<String, Object> ctx){
         if(ScanUtils.empty(recipients)){
             log.info("Email not sent - no recipients listed");
             return;
@@ -56,7 +55,7 @@ public class EmailIssueService {
             messageHelper.setTo(recipients.toArray(new String[0]));
             messageHelper.setCc((emailProperties.getCc()).toArray(new String[0]));
             messageHelper.setSubject(subject);
-            String content = generateContent(ctx, template);
+            String content = generateContent(ctx, emailProperties.getTemplate());
             messageHelper.setText(content, true);
         };
         try {

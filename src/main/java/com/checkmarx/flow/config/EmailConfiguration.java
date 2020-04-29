@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.beans.ConstructorProperties;
 import java.util.Properties;
@@ -45,6 +48,28 @@ public class EmailConfiguration {
         props.put("mail.smtp.starttls.enable", "true");
 
         return mailSender;
+    }
+
+    @Bean("cxFlowExtTemplateEngine")
+    public TemplateEngine getTemplateEngine() {
+
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(fileTemplateResolver());
+
+        return templateEngine;
+
+    }
+
+    public FileTemplateResolver fileTemplateResolver() {
+        FileTemplateResolver fileTemplateResolver = new FileTemplateResolver();
+      //fileTemplateResolver.setPrefix("templates/");
+        fileTemplateResolver.setSuffix(".html");
+        fileTemplateResolver.setTemplateMode(TemplateMode.HTML);
+        fileTemplateResolver.setCharacterEncoding("UTF-8");
+        fileTemplateResolver.setOrder(1);
+        fileTemplateResolver.setCheckExistence(true);
+
+        return fileTemplateResolver;
     }
 
 }
