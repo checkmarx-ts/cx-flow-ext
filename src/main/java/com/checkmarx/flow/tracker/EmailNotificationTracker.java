@@ -4,7 +4,7 @@ import com.checkmarx.flow.custom.IssueTracker;
 import com.checkmarx.flow.dto.Issue;
 import com.checkmarx.flow.dto.ScanRequest;
 import com.checkmarx.flow.exception.MachinaException;
-import com.checkmarx.flow.service.EmailIssueService;
+import com.checkmarx.flow.service.EmailNotificationService;
 import com.checkmarx.sdk.dto.ScanResults;
 import com.checkmarx.sdk.utils.ScanUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +17,16 @@ import java.util.Map;
 
 @Slf4j
 @Service("EmailNotification")
-public class EmailIssueTracker implements IssueTracker {
-    private final EmailIssueService emailIssueService;
+public class EmailNotificationTracker implements IssueTracker {
+    private final EmailNotificationService emailNotificationService;
     public static final String WEB_HOOK_PAYLOAD = "web-hook-payload";
     public static final String MESSAGE_KEY = "message";
     public static final String HEADING_KEY = "heading";
     public static final String EMAIL_HEADING = "Scan Summary for ";
     public static final String PUSHER_NAME_KEY = "pusher";
 
-    public EmailIssueTracker(EmailIssueService emailIssueService) {
-        this.emailIssueService = emailIssueService;
+    public EmailNotificationTracker(EmailNotificationService emailNotificationService) {
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class EmailIssueTracker implements IssueTracker {
             emailCtx.put("link", results.getLink());
         }
 
-        emailIssueService.sendmail(request.getEmail(), emailSubject, emailCtx);
+        emailNotificationService.sendmail(request.getEmail(), emailSubject, emailCtx);
 
     }
 

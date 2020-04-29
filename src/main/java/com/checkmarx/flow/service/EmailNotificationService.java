@@ -18,15 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class EmailIssueService {
+public class EmailNotificationService {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(EmailIssueService.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(EmailNotificationService.class);
     private final EmailProperties emailProperties;
     private final TemplateEngine templateEngine;
     private final JavaMailSender emailSender;
 
     @ConstructorProperties({"emailProperties", "templateEngine", "emailSender"})
-    public EmailIssueService(EmailProperties emailProperties, @Qualifier("cxFlowExtTemplateEngine") TemplateEngine templateEngine, @Qualifier("cxFlowExtMailSender") JavaMailSender emailSender) {
+    public EmailNotificationService(EmailProperties emailProperties, @Qualifier("cxFlowExtTemplateEngine") TemplateEngine templateEngine, @Qualifier("cxFlowExtMailSender") JavaMailSender emailSender) {
         this.emailProperties = emailProperties;
         this.templateEngine = templateEngine;
         this.emailSender = emailSender;
