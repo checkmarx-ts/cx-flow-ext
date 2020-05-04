@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:text="${heading}"></head>
+
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #222222;">
+<center style="width: 100%; background-color: #222222;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 auto;">
+        <tr>
+            <td style="background-color: #ffffff;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                        <td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                            <h2 th:text="${message}"></h2>
+                        </td>
+                    </tr>
+                    <tr><td colspan="2" style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                        <h3  style="text-shadow: 0.5px 0.5px 2px #000025; text-align: center;" th:if="${branch}" th:text="${branch}"></h3>
+                    </td>
+                    </tr>
+                    <tr><td colspan="2" style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                        <h3  style="text-shadow: 0.5px 0.5px 2px #000025; text-align: center;" th:if="${pusher}" th:text="${pusher}"></h3>
+                    </td>
+                    </tr>
+                    <tr><td colspan="2" style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                        <h3  style="text-shadow: 0.5px 0.5px 2px #000025; text-align: center;" th:if="${teamName}" th:text="${teamName}"></h3>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                        <span class="vulns">
+
+<!-- Vulnerability List table START -->
+                        <table border="2">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"> Link </th>
+                                <th style="width:50px;"> Severity </th>
+                                <th style="width:150px;"> Category </th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                <tr th:if="${issues.empty}">
+                                    <td colspan="4"> No Issues Found </td>
+                                </tr>
+                                <tr th:each="issue : ${issues}">
+                                    <td><a th:href="${issue.link}" rel="noopener noreferrer" target="_blank">Link</a></td>
+                                    <td><span th:class="${issue.severity}" th:text="${issue.severity}"></span></td>
+                                    <td><span th:text="${issue.vulnerability}"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </span>
+<!-- Vulnerability List table END-->
+                        <br><br>
+                    </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>
