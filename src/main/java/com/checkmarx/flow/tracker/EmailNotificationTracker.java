@@ -20,10 +20,13 @@ import java.util.Map;
 public class EmailNotificationTracker implements IssueTracker {
     private final EmailNotificationService emailNotificationService;
     public static final String WEB_HOOK_PAYLOAD = "web-hook-payload";
-    public static final String MESSAGE_KEY = "message";
-    public static final String HEADING_KEY = "heading";
-    public static final String EMAIL_HEADING = "Scan Summary for ";
-    public static final String PUSHER_NAME_KEY = "pusher";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_HEADING = "heading";
+    public static final String EMAIL_HEADING_VALUE = "Scan Summary for ";
+    public static final String KEY_PUSHER_NAME = "pusher";
+    public static final String KEY_TEAM_NAME = "teamName";
+    public static final String KEY_BRANCH = "branch";
+
 
     public EmailNotificationTracker(EmailNotificationService emailNotificationService) {
         this.emailNotificationService = emailNotificationService;
@@ -33,20 +36,41 @@ public class EmailNotificationTracker implements IssueTracker {
     public void init(ScanRequest request, ScanResults results) throws MachinaException {
 
         Map<String, Object> emailCtx = new HashMap<>();
+        String emailSubject = "";
 
-        emailCtx.put(MESSAGE_KEY, "Scan Summary for "
-                        .concat(request.getNamespace()).concat("/").concat(request.getRepoName()).concat(" - ")
-                        .concat(request.getRepoUrl()));
-        emailCtx.put(HEADING_KEY, EMAIL_HEADING.concat(request.getRepoName()));
-        String emailSubject = EMAIL_HEADING.concat(request.getNamespace()).concat("/").concat(request.getRepoName());
+        if(request.getNamespace()!= null && request.getRepoName()!=null && request.getRepoUrl()!=null) {
+            emailCtx.put(KEY_MESSAGE, "Scan Summary for "
+                    .concat(request.getNamespace()).concat("/").concat(request.getRepoName()).concat(" - ")
+                    .concat(request.getRepoUrl()));
 
-        //retrieve the name of the pusher
-        String payLoadBody = request.getAdditionalMetadata(WEB_HOOK_PAYLOAD);
-        if(!ScanUtils.empty(payLoadBody))
+            emailCtx.put(KEY_HEADING, EMAIL_HEADING_VALUE.concat(request.getRepoName()));
+            emailSubject = EMAIL_HEADING_VALUE.concat(request.getNamespace()).concat("/").concat(request.getRepoName());
+
+
+            emailCtx.put(KEY_BRANCH, "Branch: ".concat(request.getBranch()));
+
+            //retrieve the name of the pusher
+            String payLoadBody = request.getAdditionalMetadata(WEB_HOOK_PAYLOAD);
+            if(!ScanUtils.empty(payLoadBody))
+            {
+                JSONObject jsonPayLoad = new JSONObject(payLoadBody);
+                String pusherName = jsonPayLoad.getJSONObject("pusher").getString("name");
+                emailCtx.put(KEY_PUSHER_NAME, "Last Push done by: ".concat(pusherName));
+            }
+
+        }
+        else
         {
-            JSONObject jsonPayLoad = new JSONObject(payLoadBody);
-            String pusherName = jsonPayLoad.getJSONObject("pusher").getString("name");
-            emailCtx.put(PUSHER_NAME_KEY, "Last Push done by: ".concat(pusherName));
+            emailCtx.put(KEY_MESSAGE, "Scan Results for Project:"
+                    .concat(request.getProject()));
+            emailCtx.put(KEY_HEADING, "Scan Results for Project: "
+                    .concat(request.getProject()));
+
+            emailSubject = "Scan Results for Project ".concat(request.getProject());
+
+            emailCtx.put(KEY_TEAM_NAME,"Team Name: ".concat(request.getTeam()));
+
+
         }
 
         //results

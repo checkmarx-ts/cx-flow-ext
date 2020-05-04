@@ -40,10 +40,7 @@ public class EmailNotificationService {
      * @param ctx
      */
     public void sendmail(List<String> recipients, @NotNull String subject, @NotNull Map<String, Object> ctx){
-        if(ScanUtils.empty(recipients)){
-            log.info("Email not sent - no recipients listed");
-            return;
-        }
+
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             log.info("Sending Custom CxExt email");
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
@@ -52,8 +49,15 @@ public class EmailNotificationService {
             if(!ScanUtils.empty(contact)){
                 messageHelper.setFrom(contact);
             }
-            messageHelper.setTo(recipients.toArray(new String[0]));
-            messageHelper.setCc((emailProperties.getCc()).toArray(new String[0]));
+
+            if(!ScanUtils.empty(recipients)) {
+                messageHelper.setTo(recipients.toArray(new String[0]));
+                messageHelper.setCc((emailProperties.getCc()).toArray(new String[0]));
+            }else
+            {
+                messageHelper.setTo((emailProperties.getCc()).toArray(new String[0]));
+            }
+
             messageHelper.setSubject(subject);
             String content = generateContent(ctx, emailProperties.getTemplate());
             messageHelper.setText(content, true);
