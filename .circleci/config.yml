@@ -6,7 +6,7 @@ jobs:
     working_directory: ~/repo
     environment:
       MAVEN_OPTS: -Xmx3200m
-      CX_FLOW_URL: https://github.com/checkmarx-ts/cx-flow.git
+      CX_FLOW_URL: https://github.com/checkmarx-ltd/cx-flow.git
     steps:
       - checkout
       - restore_cache:
