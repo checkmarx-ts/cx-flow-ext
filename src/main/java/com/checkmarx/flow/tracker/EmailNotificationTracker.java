@@ -21,8 +21,8 @@ public class EmailNotificationTracker implements IssueTracker {
     private final EmailNotificationService emailNotificationService;
     public static final String WEB_HOOK_PAYLOAD = "web-hook-payload";
     public static final String KEY_MESSAGE = "message";
-    public static final String KEY_HEADING = "heading";
-    public static final String EMAIL_HEADING_VALUE = "Scan Summary for ";
+    public static final String KEY_EMAIL_HEADING = "heading";
+    public static final String VALUE_EMAIL_HEADING = "Scan Summary for ";
     public static final String KEY_PUSHER_NAME = "pusher";
     public static final String KEY_TEAM_NAME = "teamName";
     public static final String KEY_BRANCH = "branch";
@@ -39,39 +39,35 @@ public class EmailNotificationTracker implements IssueTracker {
         String emailSubject = "";
 
         if(request.getNamespace()!= null && request.getRepoName()!=null && request.getRepoUrl()!=null) {
-            emailCtx.put(KEY_MESSAGE, "Scan Summary for "
-                    .concat(request.getNamespace()).concat("/").concat(request.getRepoName()).concat(" - ")
+            emailCtx.put(KEY_MESSAGE, (request.getNamespace()).concat("/").concat(request.getRepoName()).concat(" - ")
                     .concat(request.getRepoUrl()));
 
-            emailCtx.put(KEY_HEADING, EMAIL_HEADING_VALUE.concat(request.getRepoName()));
-            emailSubject = EMAIL_HEADING_VALUE.concat(request.getNamespace()).concat("/").concat(request.getRepoName());
-
-
-            emailCtx.put(KEY_BRANCH, "Branch: ".concat(request.getBranch()));
-
+            emailCtx.put(KEY_EMAIL_HEADING, VALUE_EMAIL_HEADING.concat(request.getRepoName()));
+            emailCtx.put("repo", request.getRepoUrl());
+            emailSubject = VALUE_EMAIL_HEADING.concat(request.getNamespace()).concat("/").concat(request.getRepoName());
+            
             //retrieve the name of the pusher
             String payLoadBody = request.getAdditionalMetadata(WEB_HOOK_PAYLOAD);
             if(!ScanUtils.empty(payLoadBody))
             {
                 JSONObject jsonPayLoad = new JSONObject(payLoadBody);
                 String pusherName = jsonPayLoad.getJSONObject("pusher").getString("name");
-                emailCtx.put(KEY_PUSHER_NAME, "Last Push done by: ".concat(pusherName));
+                emailCtx.put(KEY_PUSHER_NAME, "Last push done by: ".concat(pusherName));
             }
-
         }
         else
         {
-            emailCtx.put(KEY_MESSAGE, "Scan Results for Project:"
-                    .concat(request.getProject()));
-            emailCtx.put(KEY_HEADING, "Scan Results for Project: "
-                    .concat(request.getProject()));
-
-            emailSubject = "Scan Results for Project ".concat(request.getProject());
-
-            emailCtx.put(KEY_TEAM_NAME,"Team Name: ".concat(request.getTeam()));
-
+            emailSubject = VALUE_EMAIL_HEADING.concat("Project: ").concat(request.getProject());
+            emailCtx.put(KEY_MESSAGE, "Project: ".concat(request.getProject()));
+            emailCtx.put(KEY_EMAIL_HEADING, VALUE_EMAIL_HEADING.concat("Project: ").concat(request.getProject()));
 
         }
+
+        if(!ScanUtils.empty(request.getBranch()))
+        {
+            emailCtx.put(KEY_BRANCH, "Branch: ".concat(request.getBranch()));
+        }
+        emailCtx.put(KEY_TEAM_NAME,"Team Name: ".concat(request.getTeam()));
 
         //results
         if (results != null) {
@@ -82,13 +78,10 @@ public class EmailNotificationTracker implements IssueTracker {
         }
 
         emailNotificationService.sendmail(request.getEmail(), emailSubject, emailCtx);
-
     }
 
     @Override
     public void complete(ScanRequest request, ScanResults results) throws MachinaException {
-
-
 
     }
 
