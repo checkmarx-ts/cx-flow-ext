@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:8-jdk@sha256:c385d9c97061d5c4f10b0e5f203c16546b4fd229cc44017ebd88a95529f5475e
     working_directory: ~/repo
     environment:
       MAVEN_OPTS: -Xmx3200m
@@ -41,7 +41,7 @@ jobs:
 
   publish-github-release:
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.9@sha256:acc81847ea4e5b11a61f62aaab537dc622027e406f2b36da6e36215aa7c89447
     steps:
       - attach_workspace:
           at: .
